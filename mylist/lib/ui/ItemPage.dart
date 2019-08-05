@@ -21,9 +21,11 @@ class _ItemPageState extends State<ItemPage> {
 
   final _nameController = TextEditingController();
   final _qtdController = TextEditingController();
-  final _medidaController = TextEditingController();
 
+  var medidaSelecionada;
   final _nameFocus = FocusNode();
+
+  var _sizeItens;
 
   _ItemPageState(Compra compra) {
     this.compra = compra;
@@ -33,6 +35,7 @@ class _ItemPageState extends State<ItemPage> {
   void initState() {
     _editedItem = Item();
     _getAllItens(compra.id);
+    _getSize(compra.id);
 
     super.initState();
   }
@@ -41,9 +44,7 @@ class _ItemPageState extends State<ItemPage> {
 
   List<Item> listaItens = List();
 
-  List<String> _locations = ['kg', 'l', 'g', 'mg', 'T', 'ml']; // Option 2
-
-  String _selectedLocation;
+  List<String> _locations = ['kg', 'l', 'g', 'mg', 'T', 'ml'];
 
   @override
   Widget build(BuildContext context) {
@@ -64,6 +65,9 @@ class _ItemPageState extends State<ItemPage> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
+          _nameController.text = '';
+          _qtdController.text = '';
+          _editedItem.ok = false;
           _dialogAdicionaItem(compra.id, context);
         },
         child: Icon(Icons.add),
@@ -72,15 +76,33 @@ class _ItemPageState extends State<ItemPage> {
       body: Column(
         children: <Widget>[
           Expanded(
-              child: RefreshIndicator(
-            onRefresh: _ordenar,
-            child: ListView.builder(
-                padding: EdgeInsets.all(1.0),
-                itemCount: listaItens.length,
-                itemBuilder: (context, index) {
-                  return _cardItem(context, index);
-                }),
-          )),
+              child: _sizeItens.toString()  != '0'
+                  ? RefreshIndicator(
+                      onRefresh: _ordenar,
+                      child: ListView.builder(
+                          padding: EdgeInsets.all(1.0),
+                          itemCount: listaItens.length,
+                          itemBuilder: (context, index) {
+                            return _cardItem(context, index);
+                          }),
+                    )
+                  : Center(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: <Widget>[
+                          Image.asset("images/bck_carrinho.png",
+                              color: Color.fromRGBO(255, 255, 255, 0.5),
+                              colorBlendMode: BlendMode.modulate),
+                          Text(
+                            "Nenhum item na lista!",
+                            style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                color: Colors.grey,
+                                fontSize: 20.0),
+                          )
+                        ],
+                      ),
+                    )),
         ],
       ),
     );
@@ -95,14 +117,13 @@ class _ItemPageState extends State<ItemPage> {
   }
 
   Widget _cardItem(BuildContext context, int index) {
-    String cont = (index + 1).toString() + ".";
-
     String _qtdMedida = "";
 
     _qtdMedida += listaItens[index].qtdItem == null
         ? ""
         : listaItens[index].qtdItem.toString();
-    _qtdMedida += listaItens[index].medidaItem ?? "";
+
+    _qtdMedida += ' '+listaItens[index].medidaItem ?? "";
 
     return Dismissible(
       key: Key(DateTime.now().millisecondsSinceEpoch.toString()),
@@ -124,9 +145,14 @@ class _ItemPageState extends State<ItemPage> {
                 style: listaItens[index].ok == false
                     ? TextStyle(
                         fontSize: 20.0,
-                        fontWeight: FontWeight.bold,
+
                       )
-                    : TextStyle(fontSize: 20.0, fontWeight: FontWeight.w300)),
+                    : TextStyle(fontSize: 20.0, fontWeight: FontWeight.w300,
+                  decoration: TextDecoration.lineThrough,
+                  decorationColor: Colors.black,
+                  decorationStyle: TextDecorationStyle.solid,
+
+                )),
             value: listaItens[index].ok,
             secondary: Container(
                 child: Text(
@@ -148,6 +174,7 @@ class _ItemPageState extends State<ItemPage> {
       onDismissed: (direction) {
         helper.deleteItem(listaItens[index].idItem);
         _getAllItens(compra.id);
+        _getSize(compra.id);
       },
     );
   }
@@ -201,18 +228,21 @@ class _ItemPageState extends State<ItemPage> {
                 height: 10,
               ),
               DropdownButton(
+                isExpanded: true,
                 hint: Text('Unidade de medida'), // Not necessary for Option 1
-                value: _editedItem.medidaItem,
+                value: medidaSelecionada,
 
                 onChanged: (newValue) {
                   setState(() {
                     _editedItem.medidaItem = newValue;
+
+                    medidaSelecionada = newValue;
                   });
                 },
-                items: _locations.map((location) {
+                items: _locations.map((medida) {
                   return DropdownMenuItem(
-                    child: new Text(location),
-                    value: location,
+                    child: new Text(medida),
+                    value: medida,
                   );
                 }).toList(),
               ),
@@ -248,6 +278,7 @@ class _ItemPageState extends State<ItemPage> {
                   _nameController.text = "";
                   Navigator.pop(context, _editedItem);
                   _getAllItens(compra.id);
+                  _getSize(compra.id);
                 } else {
                   FocusScope.of(context).requestFocus(_nameFocus);
                 }
@@ -257,6 +288,14 @@ class _ItemPageState extends State<ItemPage> {
         );
       },
     );
+  }
+
+  void _getSize(int fkCompra) {
+    helper.getSizeItem(fkCompra).then((size) {
+      setState(() {
+        _sizeItens = size.toString();
+      });
+    });
   }
 
   Future<Null> _ordenar() async {

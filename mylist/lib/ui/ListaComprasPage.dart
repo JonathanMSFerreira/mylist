@@ -21,14 +21,20 @@ class _ListaComprasPageState extends State<ListaComprasPage> {
   var _sizeListaCompras;
 
 
+  var _sizeItens;
+
 
   @override
   void initState() {
+
     _editedCompra = Compra();
 
     _getAllCompras();
 
     _getSize();
+
+
+
 
 
     super.initState();
@@ -62,7 +68,9 @@ class _ListaComprasPageState extends State<ListaComprasPage> {
                       itemBuilder: (context, index) {
                         return _cardCompra(context, index);
                       })
-                  : Center(
+                  :
+
+              Center(
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: <Widget>[
@@ -205,7 +213,13 @@ class _ListaComprasPageState extends State<ListaComprasPage> {
 
 
 
-
+  void _getSizeItens(int fkCompra) {
+    helper.getSizeItem(fkCompra).then((size) {
+      setState(() {
+        _sizeItens = size.toString();
+      });
+    });
+  }
 
 
   void _getSize() {
@@ -216,7 +230,33 @@ class _ListaComprasPageState extends State<ListaComprasPage> {
     });
   }
 
+
+  String _quantidadeItensCard(){
+
+    if(_sizeItens != null) {
+      switch (_sizeItens) {
+        case '0':
+          return 'Nenhum item';
+        case '1':
+          return _sizeItens + ' item';
+
+        default:
+          return _sizeItens + ' itens';
+      }
+    }else{
+
+      return 'Nenhum item';
+
+    }
+
+
+
+  }
+
   Widget _cardCompra(BuildContext context, int index) {
+
+    _getSizeItens(listaCompras[index].id);
+
     return Card(
         child: Column(
       mainAxisSize: MainAxisSize.min,
@@ -224,9 +264,13 @@ class _ListaComprasPageState extends State<ListaComprasPage> {
         ListTile(
           leading: Icon(Icons.playlist_add_check),
           title: Text(listaCompras[index].name ?? "",
-              style: TextStyle(fontSize: 22.0, fontWeight: FontWeight.bold)),
+              style: TextStyle(fontSize: 25.0, fontWeight: FontWeight.bold)),
           subtitle: Text(listaCompras[index].date ?? ""),
-         /* trailing: Text("sdf"),*/
+         trailing:
+
+         Text(_quantidadeItensCard() , style: TextStyle(fontSize: 15),),
+
+
         ),
         ButtonTheme.bar(
           // make buttons use the appropriate styles for cards
@@ -241,10 +285,14 @@ class _ListaComprasPageState extends State<ListaComprasPage> {
                   _dialogRemoveCompra(listaCompras[index].id);
                 },
               ),
-              FlatButton(
-                child: const Text('Itens da lista',
+              RaisedButton(
+                child: const Text('ir para itens',
                     style: TextStyle(
-                        fontWeight: FontWeight.bold, color: Colors.redAccent)),
+                        fontWeight: FontWeight.bold, color: Colors.white)),
+
+                shape: new RoundedRectangleBorder(
+                    borderRadius: new BorderRadius.circular(30.0)),
+
                 onPressed: () {
                   Navigator.push(
                       context,
@@ -260,70 +308,3 @@ class _ListaComprasPageState extends State<ListaComprasPage> {
   }
 }
 
-
-
-/*void _dialogNovaCompra(BuildContext context) {
-    showDialog(
-      context: context,
-      barrierDismissible: false,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: new Text("Lista de Compras"),
-          content: TextField(
-            controller: _nameController,
-            focusNode: _nameFocus,
-            decoration: InputDecoration(hintText: "Nome"),
-            onChanged: (text) {
-              setState(() {
-                _editedCompra.name = text;
-                String data = "Criada em: " +
-                    DateTime.now().day.toString() +
-                    "/" +
-                    DateTime.now().month.toString() +
-                    "/" +
-                    DateTime.now().year.toString();
-                _editedCompra.date = data;
-              });
-            },
-          ),
-          actions: <Widget>[
-            // usually buttons at the bottom of the dialog
-            new FlatButton(
-              child: new Text(
-                "Cancelar",
-                style: TextStyle(color: Colors.grey[400]),
-              ),
-              onPressed: () {
-                _editedCompra.name = "";
-                Navigator.of(context).pop();
-              },
-            ),
-
-            new RaisedButton(
-              child: new Text(
-                "Criar",
-                style: TextStyle(color: Colors.white),
-              ),
-              shape: new RoundedRectangleBorder(
-                  borderRadius: new BorderRadius.circular(30.0)),
-              onPressed: () {
-                if (_editedCompra.name != null &&
-                    _editedCompra.name.isNotEmpty) {
-                  helper.saveCompra(_editedCompra);
-
-                  Navigator.pop(context, _editedCompra);
-                  _editedCompra = Compra();
-                  _nameController.text = "";
-                  _getSize();
-                  _getAllCompras();
-                } else {
-                  FocusScope.of(context).requestFocus(_nameFocus);
-                }
-              },
-            ),
-          ],
-        );
-      },
-    );
-  }
-*/
