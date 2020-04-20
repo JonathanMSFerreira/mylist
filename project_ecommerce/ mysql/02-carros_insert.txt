@@ -1,0 +1,31 @@
+#INSERE  USUARIOS
+insert into role(id,nome) values (1, 'ROLE_USER');
+insert into role(id,nome) values (2, 'ROLE_ADMIN');
+insert into user(id,nome,login,senha) values (1,'Admin','admin@admin.com','$2a$10$HKveMsPlst41Ie2LQgpijO691lUtZ8cLfcliAO1DD9TtZxEpaEoJe');
+insert into user(id,nome,login,senha) values (2,'User','user@user.com','$2a$10$HKveMsPlst41Ie2LQgpijO691lUtZ8cLfcliAO1DD9TtZxEpaEoJe');
+insert into user_roles(user_id,role_id) values(1, 1);
+insert into user_roles(user_id,role_id) values(2, 2);
+
+#INSERE CORES
+
+insert into role(id,cor) values (1, 'Vermelha');
+insert into role(id,cor) values (1, 'Azul');
+
+
+
+#Clássicos
+insert into produto (nome,descricao,url_foto,url_video,latitude,longitude,tipo) VALUES('Tucker 1948','Descrição Tucker 1948','http://www.livroandroid.com.br/livro/carros/classicos/Tucker.png','http://www.livroandroid.com.br/livro/carros/classicos/tucker.mp4','-23.564224','-46.653156','classicos');
+insert into carro (nome,descricao,url_foto,url_video,latitude,longitude,tipo) VALUES('Chevrolet Corvette','Descrição Chevrolet Corvette','http://www.livroandroid.com.br/livro/carros/classicos/Chevrolet_Corvette.png','http://www.livroandroid.com.br/livro/carros/classicos/corvette.mp4','-23.564224','-46.653156','classicos');
+insert into carro (nome,descricao,url_foto,url_video,latitude,longitude,tipo) VALUES('Chevrolet Impala Coupe','Descrição Chevrolet Impala Coupe','http://www.livroandroid.com.br/livro/carros/classicos/Chevrolet_Impala_Coupe.png','http://www.livroandroid.com.br/livro/carros/classicos/chevrolet_impala.mp4','-23.564224','-46.653156','classicos');
+insert into carro (nome,descricao,url_foto,url_video,latitude,longitude,tipo) VALUES('Cadillac Deville Convertible','Descrição Cadillac Deville Convertible','http://www.livroandroid.com.br/livro/carros/classicos/Cadillac_Deville_Convertible.png','http://www.livroandroid.com.br/livro/carros/classicos/cadillac_deville.mp4','-23.564224','-46.653156','classicos');
+insert into carro (nome,descricao,url_foto,url_video,latitude,longitude,tipo) VALUES('Chevrolet Bel-Air','Descrição Chevrolet Bel-Air','http://www.livroandroid.com.br/livro/carros/classicos/Chevrolet_BelAir.png','http://www.livroandroid.com.br/livro/carros/classicos/chevrolet_bel_air.mp4','-23.564224','-46.653156','classicos');
+insert into carro (nome,descricao,url_foto,url_video,latitude,longitude,tipo) VALUES('Cadillac Eldorado','Descrição Cadillac Eldorado','http://www.livroandroid.com.br/livro/carros/classicos/Cadillac_Eldorado.png','http://www.livroandroid.com.br/livro/carros/classicos/cadillac_eldorado.mp4','-23.564224','-46.653156','classicos');
+insert into carro (nome,descricao,url_foto,url_video,latitude,longitude,tipo) VALUES('Ferrari 250 GTO','Descrição Ferrari 250 GTO','http://www.livroandroid.com.br/livro/carros/classicos/Ferrari_250_GTO.png','http://www.livroandroid.com.br/livro/carros/classicos/ferrari_gto.mp4','-23.564224','-46.653156','classicos');
+insert into carro (nome,descricao,url_foto,url_video,latitude,longitude,tipo) VALUES('Dodge Challenger','Descrição Dodge Challenger','http://www.livroandroid.com.br/livro/carros/classicos/Dodge_Challenger.png','http://www.livroandroid.com.br/livro/carros/classicos/dodge_challenger.mp4','','','classicos');
+insert into carro (nome,descricao,url_foto,url_video,latitude,longitude,tipo) VALUES('Camaro SS 1969','Descrição Camaro SS 1969','http://www.livroandroid.com.br/livro/carros/classicos/Camaro_SS.png','http://www.livroandroid.com.br/livro/carros/classicos/camaro_ss.mp4','-23.564224','-46.653156','classicos');
+insert into carro (nome,descricao,url_foto,url_video,latitude,longitude,tipo) VALUES('Ford Mustang 1976','Descrição Ford Mustang 1976','http://www.livroandroid.com.br/livro/carros/classicos/Ford_Mustang.png','http://www.livroandroid.com.br/livro/carros/classicos/ford_mustang.mp4','-23.564224','-46.653156','classicos');
+
+
+#Count
+select count(*) from carro;
+
